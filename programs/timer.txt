@@ -3,7 +3,7 @@
 
 _start:
 	set32 ${REG_DECREMENTAL} 1  ; Sets timer decremental to 1
-	set32 ${REG_TIMER} 500      ; Sets initial timer to 500
+	set32 ${REG_TIMER} 500000   ; Sets initial timer to 500000
 
 loop:
 	sub ${REG_TIMER} ${REG_TIMER} ${REG_DECREMENTAL}  ; Subtracts 1 from timer
