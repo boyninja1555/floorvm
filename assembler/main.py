@@ -25,11 +25,12 @@ OPCODES = {
     "STORE8P": 0x17,
     "SET32": 0x18,
     "SET8": 0x19,
+    "COPY": 0x20,
     # ALU
-    "ADD": 0x20,
-    "SUB": 0x21,
-    "MUL": 0x22,
-    "DIV": 0x23,
+    "ADD": 0x21,
+    "SUB": 0x22,
+    "MUL": 0x23,
+    "DIV": 0x24,
 }
 
 
@@ -50,6 +51,7 @@ INSTRUCTION_SIZE = {
     "STORE8P": 2,
     "SET32": 5,
     "SET8": 2,
+    "COPY": 2,
     # ALU
     "ADD": 3,
     "SUB": 3,
@@ -149,7 +151,7 @@ def assemble(source: str) -> bytes:
             elif opcode == "SET32":
                 output.append(parse_number(args[0]) & 0xFF)
                 write_u32(output, parse_number(args[1]))
-            elif opcode == "SET8":
+            elif opcode in ("SET8", "COPY"):
                 output.append(parse_number(args[0]) & 0xFF)
                 output.append(parse_number(args[1]) & 0xFF)
             elif opcode in ("LOAD32", "LOAD8"):

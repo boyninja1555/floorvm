@@ -164,6 +164,14 @@ void machine_step(Machine *machine)
         break;
     }
 
+    case OP_COPY: // COPY reg target_reg
+    {
+        byte reg = cp_byte(machine);
+        byte target_reg = cp_byte(machine);
+        machine->registers[target_reg] = machine->registers[reg];
+        break;
+    }
+
         // ALU
 
     case OP_ADD: // ADD target_reg a_reg b_reg

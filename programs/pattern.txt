@@ -12,16 +12,16 @@ set32 ${REG_TEMP} 1200                 ; Sets r1 to 1200
 store32 ${REG_TEMP} ${ADDR_COUNTDOWN}  ; Stores 1200 (r1) into countdown
 
 pattern:
-	load8 ${ADDR_COLOR} ${REG_TEMP}
-	set32 ${REG_TMP2} 10
-	add ${REG_TMP2} ${REG_TEMP} ${REG_TMP2}
-	store8 ${REG_TMP2} ${ADDR_COLOR}
+	load8 ${ADDR_COLOR} ${REG_TEMP}          ; Loads color into r1
+	set32 ${REG_TMP2} 30                     ; Sets r2 to 30
+	add ${REG_TMP2} ${REG_TEMP} ${REG_TMP2}  ; Adds r1 and 30 (r2) to r2
+	store8 ${REG_TMP2} ${ADDR_COLOR}         ; Stores r2 into color
 
-	add ${REG_TEMP} ${REG_TEMP} ${REG_TEMP}  ; Sets r1 to 255
-	store8p ${REG_TEMP} ${REG_POS}           ; Stores 255 (r1) into position (r0)
+	copy ${REG_TMP2} ${REG_TEMP}             ; Copies r2 to r1
+    store8p ${REG_TEMP} ${REG_POS}           ; Stores color (r1) into position (r0)
 
-	set32 ${REG_TEMP} 1                      ; Sets r1 to 1
-	add ${REG_POS} ${REG_POS} ${REG_TEMP}    ; Adds 1 (r1) to position (r0)
+    set32 ${REG_TEMP} 1                      ; Sets r1 to 1
+    add ${REG_POS} ${REG_POS} ${REG_TEMP}    ; Adds 1 (r1) to position (r0)
 
 	load32 ${ADDR_COUNTDOWN} ${REG_TEMP}     ; Loads countdown into r1
 	set32 ${REG_TMP2} 1                      ; Sets r2 to 1

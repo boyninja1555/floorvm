@@ -42,12 +42,13 @@ typedef enum
     OP_STORE8P = 0x17,
     OP_SET32 = 0x18,
     OP_SET8 = 0x19,
+    OP_COPY = 0x20,
 
     // ALU
-    OP_ADD = 0x20,
-    OP_SUB = 0x21,
-    OP_MUL = 0x22,
-    OP_DIV = 0x23,
+    OP_ADD = 0x21,
+    OP_SUB = 0x22,
+    OP_MUL = 0x23,
+    OP_DIV = 0x24,
 } MachineOpcode;
 
 typedef enum
