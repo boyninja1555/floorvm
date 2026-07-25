@@ -20,6 +20,16 @@
 #define INPUT_START (VRAM_START + VRAM_SIZE)
 #define USER_START (INPUT_START + INPUT_SIZE)
 
+// Button Bitmasks (0=released,1=pressed)
+#define BTN_UP (1 << 0)     // 0x01 (Bit 0)
+#define BTN_DOWN (1 << 1)   // 0x02 (Bit 1)
+#define BTN_LEFT (1 << 2)   // 0x04 (Bit 2)
+#define BTN_RIGHT (1 << 3)  // 0x08 (Bit 3)
+#define BTN_A (1 << 4)      // 0x10 (Bit 4)
+#define BTN_D (1 << 5)      // 0x20 (Bit 5)
+#define BTN_SELECT (1 << 6) // 0x40 (Bit 6)
+#define BTN_START (1 << 7)  // 0x80 (Bit 7)
+
 typedef uint8_t u8;
 typedef uint16_t u16;
 typedef uint32_t u32;
@@ -44,13 +54,19 @@ typedef enum
     OP_STORE8P = 0x17,
     OP_SET32 = 0x18,
     OP_SET8 = 0x19,
-    OP_COPY = 0x20,
+    OP_COPY = 0x1A,
 
     // ALU
-    OP_ADD = 0x21,
-    OP_SUB = 0x22,
-    OP_MUL = 0x23,
-    OP_DIV = 0x24,
+    OP_ADD = 0x20,
+    OP_SUB = 0x21,
+    OP_MUL = 0x22,
+    OP_DIV = 0x23,
+    OP_AND = 0x24,
+    OP_OR = 0x25,
+    OP_XOR = 0x26,
+    OP_NOT = 0x27,
+    OP_SHL = 0x28,
+    OP_SHR = 0x29,
 } MachineOpcode;
 
 typedef enum

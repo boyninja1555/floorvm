@@ -25,12 +25,18 @@ OPCODES = {
     "STORE8P": 0x17,
     "SET32": 0x18,
     "SET8": 0x19,
-    "COPY": 0x20,
+    "COPY": 0x1A,
     # ALU
-    "ADD": 0x21,
-    "SUB": 0x22,
-    "MUL": 0x23,
-    "DIV": 0x24,
+    "ADD": 0x20,
+    "SUB": 0x21,
+    "MUL": 0x22,
+    "DIV": 0x23,
+    "AND": 0x24,
+    "OR": 0x25,
+    "XOR": 0x26,
+    "NOT": 0x27,
+    "SHL": 0x28,
+    "SHR": 0x29,
 }
 
 
@@ -57,6 +63,12 @@ INSTRUCTION_SIZE = {
     "SUB": 3,
     "MUL": 3,
     "DIV": 3,
+    "AND": 3,
+    "OR": 3,
+    "XOR": 3,
+    "NOT": 3,
+    "SHL": 3,
+    "SHR": 3,
 }
 
 
@@ -163,7 +175,18 @@ def assemble(source: str) -> bytes:
             elif opcode in ("LOAD32P", "LOAD8P", "STORE32P", "STORE8P"):
                 output.append(parse_number(args[0]) & 0xFF)
                 output.append(parse_number(args[1]) & 0xFF)
-            elif opcode in ("ADD", "SUB", "MUL", "DIV"):
+            elif opcode in (
+                "ADD",
+                "SUB",
+                "MUL",
+                "DIV",
+                "AND",
+                "OR",
+                "XOR",
+                "NOT",
+                "SHL",
+                "SHR",
+            ):
                 for arg in args:
                     output.append(parse_number(arg) & 0xFF)
         elif opcode == ".BYTE":

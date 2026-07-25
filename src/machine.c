@@ -209,5 +209,58 @@ void machine_step(Machine *machine)
         machine->registers[target_reg] = machine->registers[a_reg] / machine->registers[b_reg];
         break;
     }
+
+    case OP_AND: // AND target_reg a_reg b_reg
+    {
+        byte target_reg = cp_byte(machine);
+        byte a_reg = cp_byte(machine);
+        byte b_reg = cp_byte(machine);
+        machine->registers[target_reg] = machine->registers[a_reg] & machine->registers[b_reg];
+        break;
+    }
+
+    case OP_OR: // OR target_reg a_reg b_reg
+    {
+        byte target_reg = cp_byte(machine);
+        byte a_reg = cp_byte(machine);
+        byte b_reg = cp_byte(machine);
+        machine->registers[target_reg] = machine->registers[a_reg] | machine->registers[b_reg];
+        break;
+    }
+
+    case OP_XOR: // XOR target_reg a_reg b_reg
+    {
+        byte target_reg = cp_byte(machine);
+        byte a_reg = cp_byte(machine);
+        byte b_reg = cp_byte(machine);
+        machine->registers[target_reg] = machine->registers[a_reg] ^ machine->registers[b_reg];
+        break;
+    }
+
+    case OP_NOT: // NOT target_reg reg
+    {
+        byte target_reg = cp_byte(machine);
+        byte reg = cp_byte(machine);
+        machine->registers[target_reg] = ~machine->registers[reg];
+        break;
+    }
+
+    case OP_SHL: // SHL target_reg a_reg b_reg
+    {
+        byte target_reg = cp_byte(machine);
+        byte a_reg = cp_byte(machine);
+        byte b_reg = cp_byte(machine);
+        machine->registers[target_reg] = machine->registers[a_reg] << machine->registers[b_reg];
+        break;
+    }
+
+    case OP_SHR: // SHR target_reg a_reg b_reg
+    {
+        byte target_reg = cp_byte(machine);
+        byte a_reg = cp_byte(machine);
+        byte b_reg = cp_byte(machine);
+        machine->registers[target_reg] = machine->registers[a_reg] >> machine->registers[b_reg];
+        break;
+    }
     }
 }

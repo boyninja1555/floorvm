@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <SDL3/SDL.h>
 #include "machine.h"
+#include "input.h"
 #include "renderer.h"
 
 int main(const int argc, const char **argv)
@@ -63,6 +64,7 @@ int main(const int argc, const char **argv)
 
         for (int i = 0; i < CYCLES_PER_FRAME; i++)
         {
+            input_poll(&machine);
             machine_step(&machine);
             if (machine.status != MS_OK)
                 break;
