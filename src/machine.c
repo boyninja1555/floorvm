@@ -86,34 +86,34 @@ void machine_step(Machine *machine)
 
         // Memory
 
-    case OP_LOAD32: // LOAD32 reg addr[4]
+    case OP_LOAD32: // LOAD32 addr[4] reg
     {
-        byte reg = cp_byte(machine);
         u32 addr = cp_u32(machine);
+        byte reg = cp_byte(machine);
         machine->registers[reg] = read_u32(machine, addr);
         break;
     }
 
-    case OP_LOAD8: // LOAD8 reg addr[4]
+    case OP_LOAD8: // LOAD8 addr[4] reg
     {
-        byte reg = cp_byte(machine);
         u32 addr = cp_u32(machine);
+        byte reg = cp_byte(machine);
         machine->registers[reg] = machine->ram[addr];
         break;
     }
 
-    case OP_LOAD32P: // LOAD32P reg addr_reg
+    case OP_LOAD32P: // LOAD32P addr_reg reg
     {
-        byte reg = cp_byte(machine);
         byte addr_reg = cp_byte(machine);
+        byte reg = cp_byte(machine);
         machine->registers[reg] = read_u32(machine, machine->registers[addr_reg]);
         break;
     }
 
-    case OP_LOAD8P: // LOAD8P reg addr_reg
+    case OP_LOAD8P: // LOAD8P addr_reg reg
     {
-        byte reg = cp_byte(machine);
         byte addr_reg = cp_byte(machine);
+        byte reg = cp_byte(machine);
         machine->registers[reg] = machine->ram[machine->registers[addr_reg]];
         break;
     }

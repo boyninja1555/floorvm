@@ -1,16 +1,18 @@
-smile:
-	set8 r0 255
-	store8 r0 2130
-	store8 r0 2134
-	store8 r0 2209
-	store8 r0 2215
-	store8 r0 2249
-	store8 r0 2255
-	store8 r0 2290
-	store8 r0 2294
-	store8 r0 2331
-	store8 r0 2332
-	store8 r0 2333
+#define REG_COLOR r0
 
-forever:
-	jmp forever
+smile:
+	set8 ${REG_COLOR} 255     ; Sets color register to 255 (alpha 100%)
+	store8 ${REG_COLOR} 2130  ; Draws alpha for part of smile face
+	store8 ${REG_COLOR} 2134  ; Draws alpha for part of smile face
+	store8 ${REG_COLOR} 2209  ; Draws alpha for part of smile face
+	store8 ${REG_COLOR} 2215  ; Draws alpha for part of smile face
+	store8 ${REG_COLOR} 2249  ; Draws alpha for part of smile face
+	store8 ${REG_COLOR} 2255  ; Draws alpha for part of smile face
+	store8 ${REG_COLOR} 2290  ; Draws alpha for part of smile face
+	store8 ${REG_COLOR} 2294  ; Draws alpha for part of smile face
+	store8 ${REG_COLOR} 2331  ; Draws alpha for part of smile face
+	store8 ${REG_COLOR} 2332  ; Draws alpha for part of smile face
+	store8 ${REG_COLOR} 2333  ; Draws alpha for part of smile face
+
+forever:         ; Automatically jumped to after smile face is drawn (due to label ordering)
+	jmp forever  ; Restarts forever loop

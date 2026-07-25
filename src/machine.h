@@ -1,7 +1,10 @@
 #pragma once
 #include <stdint.h>
 
-#define FPS 60
+#define TARGET_FPS 60
+#define NS_PER_FRAME (1000000000ULL / TARGET_FPS)
+#define CYCLES_PER_FRAME 16666
+
 #define SCREEN_WIDTH 40
 #define SCREEN_HEIGHT 30
 #define REGISTERS_COUNT 8

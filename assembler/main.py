@@ -152,7 +152,10 @@ def assemble(source: str) -> bytes:
             elif opcode == "SET8":
                 output.append(parse_number(args[0]) & 0xFF)
                 output.append(parse_number(args[1]) & 0xFF)
-            elif opcode in ("LOAD32", "LOAD8", "STORE32", "STORE8"):
+            elif opcode in ("LOAD32", "LOAD8"):
+                write_u32(output, resolve(args[0], labels))
+                output.append(parse_number(args[1]) & 0xFF)
+            elif opcode in ("STORE32", "STORE8"):
                 output.append(parse_number(args[0]) & 0xFF)
                 write_u32(output, resolve(args[1], labels))
             elif opcode in ("LOAD32P", "LOAD8P", "STORE32P", "STORE8P"):

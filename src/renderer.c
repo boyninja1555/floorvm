@@ -21,11 +21,12 @@ byte renderer_init(int gui_scale)
     if (!sdl_renderer)
         return MS_KO;
 
+    SDL_SetRenderVSync(sdl_renderer, 1);
     texture = SDL_CreateTexture(sdl_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
-    SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
     if (!texture)
         return MS_KO;
 
+    SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
     return MS_OK;
 }
 
