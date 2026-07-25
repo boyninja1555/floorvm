@@ -5,7 +5,7 @@ import sys
 import ast
 
 
-PROGRAM_SIZE = 2048
+PROGRAM_SIZE = 8192
 
 
 OPCODES = {

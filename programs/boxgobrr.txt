@@ -8,6 +8,11 @@
 #define REG_DELAY r6
 #define REG_ONE r7
 
+#define ADDR_INPUT 9392
+#define BTN_SELECT 64  ; Bitmask: 00000100
+#define REG_INPUT r8
+#define REG_MASK r9
+
 _start:
 	set32 ${REG_POS} ${ADDR_VRAM}            ; Sets position register to start of VRAM
 	set32 ${REG_SPEED} 1                     ; Sets speed register to 1
@@ -18,6 +23,11 @@ _start:
 	set32 ${REG_ONE} 1                       ; Sets r7 to 1 (permanently)
 
 loop:                                         ; Automatically jumped to after _start finishes (due to label ordering)
+	load8 ${ADDR_INPUT} ${REG_INPUT}          ; Reads 8-button state
+    set32 ${REG_MASK} ${BTN_SELECT}           ; Loads bitmask for SELECT
+    and ${REG_MASK} ${REG_INPUT} ${REG_MASK}  ; r9 = r8 & 0x06
+    jmpnz loop ${REG_MASK}                    ; Retries loop if SELECT == pressed (1)
+
 	store8p ${REG_COLOR} ${REG_POS}           ; Stores main color into the position (which is always within VRAM bounds)
 	add ${REG_POS} ${REG_POS} ${REG_SPEED}    ; Adds speed to position
 	store8p ${REG_BLACK} ${REG_OPOS}          ; Stores black color into the old position (which may or may not conflict with program code due to memory bounds, why should I care?)

@@ -19,7 +19,7 @@ int main(const int argc, const char **argv)
         printf("Target FPS = %i\n", TARGET_FPS);
         printf("Screen = %ix%i\n", SCREEN_WIDTH, SCREEN_HEIGHT);
         printf("Registers count = %i\n", REGISTERS_COUNT);
-        printf("Start positions = Program:%i, VRAM:%i, User:%i\n", PROGRAM_START, VRAM_START, USER_START);
+        printf("Start positions = Program:%i, VRAM:%i, Input:%i, User:%i\n", PROGRAM_START, VRAM_START, INPUT_START, USER_START);
         return 0;
     }
 
