@@ -1,7 +1,6 @@
-#define ADDR_COLOR 3252
-#define ADDR_COUNTDOWN 3248
-#define ADDR_VRAM 2048
-#define VRAM_SIZE 1200
+#define ADDR_COLOR 9396
+#define ADDR_COUNTDOWN 9392
+#define ADDR_VRAM 8192
 #define REG_POS r0
 #define REG_TEMP r1
 #define REG_TMP2 r2

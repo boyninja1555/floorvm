@@ -1,4 +1,4 @@
-#define ADDR_VRAM 2048
+#define ADDR_VRAM 8192
 #define REG_POS r0
 #define REG_OPOS r1
 #define REG_SPEED r2
