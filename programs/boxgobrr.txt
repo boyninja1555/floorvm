@@ -1,0 +1,28 @@
+#define ADDR_VRAM 2048
+#define REG_POS r0
+#define REG_OPOS r1
+#define REG_SPEED r2
+#define REG_BLACK r3
+#define REG_COLOR r4
+#define REG_COUNTDOWN r5
+
+_start:
+	set32 ${REG_POS} ${ADDR_VRAM}
+	set32 ${REG_SPEED} 1
+	sub ${REG_OPOS} ${REG_POS} ${REG_SPEED}
+	set8 ${REG_BLACK} 0
+	set8 ${REG_COLOR} 255
+	set32 ${REG_COUNTDOWN} 1200
+	jmp loop
+
+loop:
+	store8p ${REG_COLOR} ${REG_POS}
+	add ${REG_POS} ${REG_POS} ${REG_SPEED}
+	store8p ${REG_BLACK} ${REG_OPOS}
+	add ${REG_OPOS} ${REG_OPOS} ${REG_SPEED}
+	sub ${REG_COUNTDOWN} ${REG_COUNTDOWN} ${REG_SPEED}
+	jmpiz _stop ${REG_COUNTDOWN}
+	jmp loop
+
+_stop:
+	halt

@@ -1,0 +1,17 @@
+#define ADDR_VRAM 2048
+#define REG_DECREMENTAL r1
+#define REG_TIMER r0
+#define REG_TEMP r2
+
+set32 ${REG_DECREMENTAL} 1
+set32 ${REG_TIMER} 1000
+
+_start:
+	set8 ${REG_TEMP} 255
+	store8 ${REG_TEMP} ${ADDR_VRAM}
+
+loop:
+	sub ${REG_TIMER} ${REG_TIMER} ${REG_DECREMENTAL}  ; Subtracts 1 from timer
+	jmpnz loop ${REG_TIMER}                           ; Restarts loop if timer is != to 0
+
+halt

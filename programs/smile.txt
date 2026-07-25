@@ -1,0 +1,16 @@
+smile:
+	set8 r0 255
+	store8 r0 2130
+	store8 r0 2134
+	store8 r0 2209
+	store8 r0 2215
+	store8 r0 2249
+	store8 r0 2255
+	store8 r0 2290
+	store8 r0 2294
+	store8 r0 2331
+	store8 r0 2332
+	store8 r0 2333
+
+forever:
+	jmp forever

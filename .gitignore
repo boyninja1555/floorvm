@@ -1,0 +1,10 @@
+*.from
+
+# C
+build/
+
+# Env
+.vscode/
+.idea
+*.iml
+.DS_Store

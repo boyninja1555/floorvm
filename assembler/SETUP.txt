@@ -1,0 +1,7 @@
+Setup instructions:
+1) Open this directory in a terminal (e.g. bash)
+2) Set up directory structure by running: script/init.sh
+3) Create changes by writing to: main.py
+4) Test changes by running: script/dev.sh
+5) Build project to executable by running: script/build.sh
+6) Clean up build files by running: script/cleanup.sh
