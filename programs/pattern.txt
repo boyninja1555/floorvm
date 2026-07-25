@@ -1,5 +1,5 @@
-#define ADDR_COLOR 9396
-#define ADDR_COUNTDOWN 9392
+#define ADDR_COLOR 9397
+#define ADDR_COUNTDOWN 9393
 #define ADDR_VRAM 8192
 #define REG_POS r0
 #define REG_TEMP r1
