@@ -5,6 +5,8 @@
 #define REG_BLACK r3
 #define REG_COLOR r4
 #define REG_COUNTDOWN r5
+#define REG_DELAY r6
+#define REG_ONE r7
 
 _start:
 	set32 ${REG_POS} ${ADDR_VRAM}            ; Sets position register to start of VRAM
@@ -13,12 +15,18 @@ _start:
 	set8 ${REG_BLACK} 0                      ; Sets black color register to 0 (alpha 0%)
 	set8 ${REG_COLOR} 255                    ; Sets main color register to 255 (alpha 100%)
 	set32 ${REG_COUNTDOWN} 1200              ; Sets halt countdown to 1200 (which is the end of VRAM, aka when the position reaches the end of it's path. Hacky as shit!!)
+	set32 ${REG_ONE} 1                       ; Sets r7 to 1 (permanently)
 
-loop:                                                   ; Automatically jumped to after _start finishes (due to label ordering)
-	store8p ${REG_COLOR} ${REG_POS}                     ; Stores main color into the position (which is always within VRAM bounds)
-	add ${REG_POS} ${REG_POS} ${REG_SPEED}              ; Adds speed to position
-	store8p ${REG_BLACK} ${REG_OPOS}                    ; Stores black color into the old position (which may or may not conflict with program code due to memory bounds, why should I care?)
-	add ${REG_OPOS} ${REG_OPOS} ${REG_SPEED}            ; Adds speed to old position for the next cycle
+loop:                                         ; Automatically jumped to after _start finishes (due to label ordering)
+	store8p ${REG_COLOR} ${REG_POS}           ; Stores main color into the position (which is always within VRAM bounds)
+	add ${REG_POS} ${REG_POS} ${REG_SPEED}    ; Adds speed to position
+	store8p ${REG_BLACK} ${REG_OPOS}          ; Stores black color into the old position (which may or may not conflict with program code due to memory bounds, why should I care?)
+	add ${REG_OPOS} ${REG_OPOS} ${REG_SPEED}  ; Adds speed to old position for the next cycle
+	set32 ${REG_DELAY} 30000
+
+loop_delay:
+	sub ${REG_DELAY} ${REG_DELAY} ${REG_ONE}            ; Subtracts r7 (1) from r6 (delay)
+    jmpnz loop_delay ${REG_DELAY}                       ; Delays again if r6 (delay) != zero
 	sub ${REG_COUNTDOWN} ${REG_COUNTDOWN} ${REG_SPEED}  ; Subtracts speed from countdown (possibly hacky I can't bother to figure out the logic in my brain)
 	jmpnz loop ${REG_COUNTDOWN}                         ; Restarts program loop if countdown != zero
 
