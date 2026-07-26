@@ -50,26 +50,33 @@ jobs:
           - os: linux
             arch: x86_64
             runner: ubuntu-latest
-            artifact_name: FloorVM-linux-x86_64
+            cmake_flags: ""
+            sdl_cmake_flags: ""
+            artifact_name: floorvm-linux-x86_64
           - os: linux
             arch: aarch64
             runner: ubuntu-24.04-arm
-            artifact_name: FloorVM-linux-aarch64
+            cmake_flags: ""
+            sdl_cmake_flags: ""
+            artifact_name: floorvm-linux-arm64
           - os: windows
             arch: x86_64
             runner: windows-latest
             cmake_flags: ""
-            artifact_name: FloorVM-windows-x86_64
+            sdl_cmake_flags: "-A x64"
+            artifact_name: FloorVM-win-x86_64
           - os: windows
             arch: aarch64
             runner: windows-latest
             cmake_flags: "-A ARM64"
-            artifact_name: FloorVM-windows-aarch64
+            sdl_cmake_flags: "-A ARM64"
+            artifact_name: FloorVM-win-arm64
           - os: macos
             arch: arm64
             runner: macos-latest
             cmake_flags: "-DCMAKE_OSX_ARCHITECTURES=arm64"
-            artifact_name: FloorVM-macos-arm64
+            sdl_cmake_flags: ""
+            artifact_name: floorvm-macos
 
     steps:
       - name: Checkout source
@@ -86,7 +93,7 @@ jobs:
         with:
           version: 3-latest
           install-linux-dependencies: true
-          architecture: ${{ matrix.arch }}
+          cmake-arguments: ${{ matrix.sdl_cmake_flags }}
 
       - name: Configure CMake
         run: >
