@@ -80,9 +80,9 @@ jobs:
       - name: Install dependencies (Linux)
         if: matrix.os == 'linux'
         run: |
-          sudo add-apt-repository ppa:savoury1/multimedia -y
-          sudo apt-get update
-          sudo apt-get install -y libsdl3-dev
+          wget https://github.com/libsdl-org/SDL/releases/download/release-3.4.12/SDL3-3.4.12.tar.gz -O sdl3.tar.gz
+          sudo tar -xvf sdl3.tar.gz -C /usr/local --strip-components=1
+          sudo ldconfig
 
       - name: Install dependencies (macOS)
         if: matrix.os == 'macos'
