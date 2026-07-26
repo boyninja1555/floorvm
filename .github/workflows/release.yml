@@ -57,11 +57,13 @@ jobs:
             artifact_name: FloorVM-linux-aarch64
           - os: windows
             arch: x86_64
+            vcpkg_triplet: x64-windows
             runner: windows-latest
             cmake_flags: ""
             artifact_name: FloorVM-windows-x86_64
           - os: windows
             arch: aarch64
+            vcpkg_triplet: arm64-windows
             runner: windows-latest
             cmake_flags: "-A ARM64"
             artifact_name: FloorVM-windows-aarch64
@@ -94,7 +96,7 @@ jobs:
       - name: Setup VCPKG & SDL3 (Windows)
         if: matrix.os == 'windows'
         run: |
-          vcpkg install sdl3 --triplet ${{ matrix.arch }}-windows
+          vcpkg install sdl3 --triplet ${{ matrix.vcpkg_triplet }}
 
       - name: Configure CMake
         run: >
