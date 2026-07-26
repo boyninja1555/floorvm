@@ -19,7 +19,8 @@ int main(const int argc, const char **argv)
         printf("Target FPS = %i\n", TARGET_FPS);
         printf("Screen = %ix%i\n", SCREEN_WIDTH, SCREEN_HEIGHT);
         printf("Registers count = %i\n", REGISTERS_COUNT);
-        printf("Start positions = Program:%i, VRAM:%i, Input:%i, User:%i\n", PROGRAM_START, VRAM_START, INPUT_START, USER_START);
+        printf("RAM section sizes = Program:%i, VRAM:%i, Input:%i, User:%i\n", PROGRAM_SIZE, VRAM_SIZE, INPUT_SIZE, USER_SIZE);
+        printf("RAM start positions = Program:%i, VRAM:%i, Input:%i, User:%i\n", PROGRAM_START, VRAM_START, INPUT_START, USER_START);
         return 0;
     }
 
