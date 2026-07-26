@@ -14,16 +14,16 @@ void input_poll(Machine *machine)
         return;
     }
 
-    if (state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W])
+    if (state[SDL_SCANCODE_UP])
         input_byte |= BTN_UP;
 
-    if (state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S])
+    if (state[SDL_SCANCODE_DOWN])
         input_byte |= BTN_DOWN;
 
-    if (state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A])
+    if (state[SDL_SCANCODE_LEFT])
         input_byte |= BTN_LEFT;
 
-    if (state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D])
+    if (state[SDL_SCANCODE_RIGHT])
         input_byte |= BTN_RIGHT;
 
     if (state[SDL_SCANCODE_A])
