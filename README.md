@@ -8,20 +8,20 @@ A lightweight, high-efficiency virtual machine with a variable-length byte-strea
 
 **FloorVM** operates on a unified memory map with 16 general-purpose 32-bit registers, big-endian multi-byte serialization, and a compact variable-length instruction set architecture.
 
-### System Specifications
+### System specs
 
 | Component              | Value / Specification                          |
 |------------------------|------------------------------------------------|
-| **Target Frame Rate**  | 60 FPS (CYCLES_PER_FRAME = 16,666)             |
-| **Display Resolution** | 40 × 30 pixels (1.2KB total VRAM)              |
+| **Target frame rate**  | 60 FPS (CYCLES_PER_FRAME = 16,666)             |
+| **Display desolution** | 40 × 30 pixels (1.2KB total VRAM)              |
 | **Registers**          | 16 general-purpose 32-bit registers (r0 – r15) |
-| **Program Counter**    | Unsigned 16-bit integer (pc)                   |
+| **Program counter**    | Unsigned 16-bit integer (pc)                   |
 | **Endianness**         | Big-endian                                     |
-| **Total Memory**       | 13,489 bytes (13.17 KiB)                       |
+| **Total memory**       | 13,489 bytes (13.17 KiB)                       |
 
 ---
 
-## Unified Memory Map
+## Unified memory map
 
 Memory is mapped into four distinct linear segments across a continuous byte array:
 
