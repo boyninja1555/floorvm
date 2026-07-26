@@ -92,6 +92,7 @@ jobs:
         id: sdl
         with:
           version: 3-latest
+          build-type: Release
           install-linux-dependencies: true
           cmake-arguments: ${{ matrix.sdl_cmake_flags }}
 
