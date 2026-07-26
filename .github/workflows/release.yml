@@ -1,0 +1,159 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  versioning:
+    name: Generate calender-like version
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.calver.outputs.tag }}
+      commit_msg: ${{ steps.commit.outputs.msg }}
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Calculate YYYY.MM.DD-NN Tag
+        id: calver
+        run: |
+          DATE=$(date -u +'%Y.%m.%d')
+          COUNT=$(git tag -l "${DATE}-*" | wc -l | tr -d ' ')
+          NN=$(printf "%02d" $((COUNT + 1)))
+          TAG_NAME="${DATE}-${NN}"
+          echo "tag=${TAG_NAME}" >> $GITHUB_OUTPUT
+          echo "Generated Tag: ${TAG_NAME}"
+
+      - name: Get commit message
+        id: commit
+        run: |
+          MSG=$(git log -1 --format=%s)
+          echo "msg=${MSG}" >> $GITHUB_OUTPUT
+
+  build:
+    name: Build (${{ matrix.os }} ${{ matrix.arch }})
+    needs: versioning
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - os: linux
+            arch: x86_64
+            runner: ubuntu-latest
+            artifact_name: FloorVM-linux-x86_64
+          - os: linux
+            arch: aarch64
+            runner: ubuntu-24.04-arm
+            artifact_name: FloorVM-linux-aarch64
+          - os: windows
+            arch: x86_64
+            runner: windows-latest
+            cmake_flags: ""
+            artifact_name: FloorVM-windows-x86_64
+          - os: windows
+            arch: aarch64
+            runner: windows-latest
+            cmake_flags: "-A ARM64"
+            artifact_name: FloorVM-windows-aarch64
+          - os: macos
+            arch: arm64
+            runner: macos-latest
+            cmake_flags: "-DCMAKE_OSX_ARCHITECTURES=arm64"
+            artifact_name: FloorVM-macos-arm64
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install dependencies (Linux)
+        if: matrix.os == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential libsdl3-dev
+
+      - name: Install dependencies (macOS)
+        if: matrix.os == 'macos'
+        run: |
+          brew install cmake sdl3
+
+      - name: Setup VCPKG & SDL3 (Windows)
+        if: matrix.os == 'windows'
+        run: |
+          vcpkg install sdl3:${{ matrix.arch }}-windows
+
+      - name: Configure CMake
+        run: >
+          cmake -S . -B build
+          -DCMAKE_BUILD_TYPE=Release
+          -DFLOORVM_VERSION="${{ needs.versioning.outputs.tag }}"
+          ${{ matrix.os == 'windows' && format('-DCMAKE_TOOLCHAIN_FILE={0}/scripts/buildsystems/vcpkg.cmake', env.VCPKG_INSTALLATION_ROOT) || '' }}
+          ${{ matrix.cmake_flags }}
+
+      - name: Compile executable
+        run: cmake --build build --config Release
+
+      - name: Package release (Unix)
+        if: matrix.os != 'windows'
+        run: |
+          mkdir -p dist
+          cp build/FloorVM dist/
+          cd dist && tar -czvf ../${{ matrix.artifact_name }}.tar.gz *
+
+      - name: Package release (Windows)
+        if: matrix.os == 'windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist
+          Copy-Item build\Release\FloorVM.exe dist\
+          Get-ChildItem -Path build -Filter "SDL3.dll" -Recurse | Copy-Item -Destination dist\
+          Compress-Archive -Path dist\* -DestinationPath ${{ matrix.artifact_name }}.zip
+
+      - name: Upload temporary build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: |
+            *.tar.gz
+            *.zip
+
+  publish:
+    name: Publish release
+    needs: [versioning, build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Tag repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag ${{ needs.versioning.outputs.tag }}
+          git push origin ${{ needs.versioning.outputs.tag }}
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release_assets
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.versioning.outputs.tag }}
+          name: FloorVM ${{ needs.versioning.outputs.tag }}
+          body: "${{ needs.versioning.outputs.commit_msg }}"
+          files: release_assets/**/*
+          draft: false
+          prerelease: false
