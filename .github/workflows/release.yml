@@ -94,7 +94,7 @@ jobs:
       - name: Setup VCPKG & SDL3 (Windows)
         if: matrix.os == 'windows'
         run: |
-          vcpkg install sdl3:${{ matrix.arch }}-windows
+          vcpkg install "sdl3:${{ matrix.arch }}-windows"
 
       - name: Configure CMake
         run: >
