@@ -80,22 +80,9 @@ jobs:
       - name: Install dependencies (Linux)
         if: matrix.os == 'linux'
         run: |
-          sudo tee /etc/apt/preferences.d/sid-pinning << 'EOF'
-          Package: *
-          Pin: release a=sid
-          Pin-Priority: 90
-
-          Package: libsdl3*
-          Pin: release a=sid
-          Pin-Priority: 900
-          EOF
-
+          sudo add-apt-repository ppa:savoury1/multimedia -y
           sudo apt-get update
-          sudo apt-get install -y debian-archive-keyring
-          sudo cp /usr/share/keyrings/debian-archive-keyring.gpg /etc/apt/trusted.gpg.d/
-          echo "deb http://deb.debian.org/debian sid main" | sudo tee /etc/apt/sources.list.d/debian-sid.list
-          sudo apt-get update
-          sudo apt-get install -y -t sid libsdl3-dev
+          sudo apt-get install -y libsdl3-dev
 
       - name: Install dependencies (macOS)
         if: matrix.os == 'macos'
