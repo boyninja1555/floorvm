@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <SDL3/SDL.h>
+#include "util.h"
 #include "machine.h"
 #include "input.h"
 #include "renderer.h"
@@ -32,26 +33,9 @@ int main(const int argc, const char **argv)
         return 1;
     }
 
-    FILE *file = fopen(argv[1], "rb");
-    if (!file)
-    {
-        fprintf(stderr, "ROM does not exist!\n");
+    program_romfile(argv[1]);
+    if (program_loadrom(&machine) == 1)
         return 1;
-    }
-
-    fseek(file, 0, SEEK_END);
-    long size = ftell(file);
-    rewind(file);
-
-    if (size > PROGRAM_SIZE)
-    {
-        fprintf(stderr, "ROM too large (%ld bytes), must be %i bytes!\n", size, PROGRAM_SIZE);
-        fclose(file);
-        return 1;
-    }
-
-    fread(machine.ram, sizeof(byte), PROGRAM_SIZE, file);
-    fclose(file);
 
     byte running = 1;
     Uint64 next_frame_time = SDL_GetTicksNS();
