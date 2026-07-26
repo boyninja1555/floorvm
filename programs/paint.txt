@@ -1,0 +1,98 @@
+#define ADDR_VRAM 8192
+#define ADDR_INPUT 9392
+
+; Button bitmasks
+#define BTN_UP 1       ; Bit 0 (0x01)
+#define BTN_DOWN 2     ; Bit 1 (0x02)
+#define BTN_LEFT 4     ; Bit 2 (0x04)
+#define BTN_RIGHT 8    ; Bit 3 (0x08)
+#define BTN_SELECT 64  ; Bit 6 (0x40)
+
+; Register allocations
+#define REG_X r0              ; Cursor X (0-39)
+#define REG_Y r1              ; Cursor Y (0-29)
+#define REG_COLOR r2          ; Draw color
+#define REG_INPUT r3          ; Input byte
+#define REG_MASK r4           ; Temporary register for bitwise operations
+#define REG_ADDR r5           ; Calculated VRAM address
+#define REG_TEMP r6           ; Temporary multi-use value
+#define REG_DELAY r7          ; Frame delay counter
+#define REG_ONE r8            ; CONSTANT - 1
+#define REG_WIDTH r9          ; CONSTANT - 40 (screen width)
+#define REG_VRAM r10          ; CONSTANT - 8192 (VRAM start)
+#define REG_CURSOR_COLOR r11  ; CONSTANT - 127 (cursor color)
+
+_start:
+    ; Initializes constants
+    set32 ${REG_ONE} 1
+    set32 ${REG_WIDTH} 40
+    set32 ${REG_VRAM} ${ADDR_VRAM}
+	set8 ${REG_CURSOR_COLOR} 127
+
+    ; Initializes cursor position (centered at 20, 15)
+    set32 ${REG_X} 20
+    set32 ${REG_Y} 15
+
+game_loop:
+    load8 ${ADDR_INPUT} ${REG_INPUT}  ; Reads input byte
+
+    ; Determines color (defaults to 255, 0 if SELECT is held)
+    set8 ${REG_COLOR} 255
+    set32 ${REG_MASK} ${BTN_SELECT}
+    and ${REG_MASK} ${REG_INPUT} ${REG_MASK}
+    jmpiz skip_eraser ${REG_MASK}
+    set8 ${REG_COLOR} 0               ; Only when SELECT is held, switches to eraser
+
+skip_eraser:
+	; Stamps color (trail, basically)
+    mul ${REG_ADDR} ${REG_Y} ${REG_WIDTH}
+    add ${REG_ADDR} ${REG_ADDR} ${REG_X}
+    add ${REG_ADDR} ${REG_ADDR} ${REG_VRAM}
+    store8p ${REG_COLOR} ${REG_ADDR}
+
+	; Handles movement (checks every direction independently for diagonal movement)
+    set32 ${REG_MASK} ${BTN_UP}
+    and ${REG_MASK} ${REG_INPUT} ${REG_MASK}
+    jmpiz check_down ${REG_MASK}
+    jmpiz check_down ${REG_Y}  ; Prevents underflow if Y == 0
+    sub ${REG_Y} ${REG_Y} ${REG_ONE}
+
+check_down:  ; Downward movement
+    set32 ${REG_MASK} ${BTN_DOWN}
+    and ${REG_MASK} ${REG_INPUT} ${REG_MASK}
+    jmpiz check_left ${REG_MASK}
+    set32 ${REG_TEMP} 29            ; Height - 1
+    sub ${REG_TEMP} ${REG_TEMP} ${REG_Y}
+    jmpiz check_left ${REG_TEMP}    ; Prevent overflow if Y == 29
+    add ${REG_Y} ${REG_Y} ${REG_ONE}
+
+check_left:  ; Leftward movement
+    set32 ${REG_MASK} ${BTN_LEFT}
+    and ${REG_MASK} ${REG_INPUT} ${REG_MASK}
+    jmpiz check_right ${REG_MASK}
+    jmpiz check_right ${REG_X}      ; Prevent underflow if X == 0
+    sub ${REG_X} ${REG_X} ${REG_ONE}
+
+check_right:  ; Rightward movement
+    set32 ${REG_MASK} ${BTN_RIGHT}
+    and ${REG_MASK} ${REG_INPUT} ${REG_MASK}
+    jmpiz draw_cursor ${REG_MASK}
+    set32 ${REG_TEMP} 39            ; Width - 1
+    sub ${REG_TEMP} ${REG_TEMP} ${REG_X}
+    jmpiz draw_cursor ${REG_TEMP}   ; Prevent overflow if X == 39
+    add ${REG_X} ${REG_X} ${REG_ONE}
+
+draw_cursor:
+    ; Plots pixel into VRAM
+    mul ${REG_ADDR} ${REG_Y} ${REG_WIDTH}
+    add ${REG_ADDR} ${REG_ADDR} ${REG_X}
+    add ${REG_ADDR} ${REG_ADDR} ${REG_VRAM}
+    store8p ${REG_CURSOR_COLOR} ${REG_ADDR}  ; Highlight current position as 127
+
+    ; Frame delay (affects movement speed)
+    set32 ${REG_DELAY} 25000
+
+delay_loop:
+    sub ${REG_DELAY} ${REG_DELAY} ${REG_ONE}
+    jmpnz delay_loop ${REG_DELAY}
+    jmp game_loop
