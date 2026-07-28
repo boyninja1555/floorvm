@@ -13,7 +13,7 @@ A lightweight, high-efficiency virtual machine with a variable-length byte-strea
 | Component              | Value / Specification                          |
 |------------------------|------------------------------------------------|
 | **Target frame rate**  | 60 FPS (CYCLES_PER_FRAME = 16,666)             |
-| **Display desolution** | 40 × 30 pixels (1.2KB total VRAM)              |
+| **Display resolution** | 40 × 30 pixels (1.2KB total VRAM)              |
 | **Registers**          | 16 general-purpose 32-bit registers (r0 – r15) |
 | **Program counter**    | Unsigned 16-bit integer (pc)                   |
 | **Endianness**         | Big-endian                                     |
