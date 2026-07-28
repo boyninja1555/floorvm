@@ -137,19 +137,19 @@ The Python assembler compiles `.asm` text files into ROMs padded to exactly 8 Ki
 #define INPUT 0x24B0
 
 start:
-    SET32 r0, ${VRAM}        ; Loads VRAM base address into r0
-    SET8  r1, 0xFF           ; Color value (full intensity)
-    STORE8 r1, ${VRAM}       ; Draws pixel at top-left corner (0,0)
+    SET32 r0 ${VRAM}   ; Loads VRAM base address into r0
+    SET8 r1 0xFF       ; Color value (full intensity)
+    STORE8 r1 ${VRAM}  ; Draws pixel at top-left corner (0,0)
 
 loop:
-    LOAD8 ${INPUT}, r2       ; Reads controller button bitmask
-    SET8 r3, 0x10            ; Bit 4 = BTN_A
-    AND r4, r2, r3           ; Checks if A is pressed
-    JMPNZ button_pressed, r4 ; Jump if BTN_A is down
+    LOAD8 ${INPUT} r2        ; Reads controller button bitmask
+    SET8 r3 0x10             ; Bit 4 = BTN_A
+    AND r4 r2 r3             ; Checks if A is pressed
+    JMPNZ button_pressed r4  ; Jump if BTN_A is down
     JMP loop                 ; Repeats main loop
 
 button_pressed:
-    HALT                     ; Stops execution
+    HALT  ; Stops execution
 ```
 
 ---
