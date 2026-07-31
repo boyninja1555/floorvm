@@ -9,7 +9,7 @@
 
 int main(const int argc, const char **argv)
 {
-    if (argc != 2)
+    if (argc < 2)
     {
         fprintf(stderr, "Please specify a program ROM file!\n\tUsage: %s <file.from>\n", argv[0]);
         return 1;
@@ -33,7 +33,7 @@ int main(const int argc, const char **argv)
         return 1;
     }
 
-    program_romfile(argv[1]);
+    program_romfile(argv[1], argc == 3 && (strcmp(argv[2], ":-disc") == 0));
     if (program_loadrom(&machine) == 1)
         return 1;
 

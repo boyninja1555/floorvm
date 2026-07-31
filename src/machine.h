@@ -1,5 +1,7 @@
 #pragma once
 #include <stdint.h>
+#include <stdbool.h>
+#include <stdalign.h>
 
 #define TARGET_FPS 60
 #define NS_PER_FRAME (1000000000ULL / TARGET_FPS)
@@ -78,7 +80,7 @@ typedef enum
 typedef struct
 {
     byte status;
-    byte ram[RAM_SIZE];
+    alignas(2048) byte ram[RAM_SIZE];
     u16 pc;
     u32 registers[REGISTERS_COUNT];
 } Machine;
