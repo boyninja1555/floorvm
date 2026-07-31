@@ -66,13 +66,13 @@ byte program_loadisc(Machine *machine)
     int fd = open(program_filepath, O_RDONLY);
     if (fd < 0)
     {
-        perror("Linux: Failed to open optical drive");
+        perror("Failed to open optical drive");
         return MS_KO;
     }
 
     if (lseek(fd, 0, SEEK_SET) == (off_t)-1)
     {
-        perror("Linux: Seek to LBA 0 failed");
+        perror("Seek to LBA 0 failed");
         close(fd);
         return MS_KO;
     }
@@ -81,7 +81,7 @@ byte program_loadisc(Machine *machine)
     close(fd);
     if (bytes_read != PROGRAM_SIZE)
     {
-        fprintf(stderr, "Linux: Disc read error! expected %d bytes, got %zd.\n", PROGRAM_SIZE, bytes_read);
+        fprintf(stderr, "Disc read error! expected %d bytes, got %zd.\n", PROGRAM_SIZE, bytes_read);
         return MS_KO;
     }
 #endif
