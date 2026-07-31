@@ -66,13 +66,13 @@ byte program_loadisc(Machine *machine)
     int fd = open(program_filepath, O_RDONLY);
     if (fd < 0)
     {
-        perror("Failed to open optical drive");
+        perror("Failed to open optical drive!");
         return MS_KO;
     }
 
     if (lseek(fd, 0, SEEK_SET) == (off_t)-1)
     {
-        perror("Seek to LBA 0 failed");
+        perror("Seek to LBA 0 failed!");
         close(fd);
         return MS_KO;
     }
