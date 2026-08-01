@@ -109,7 +109,7 @@ def resolve(value: str, labels: dict[str, int]) -> int:
     try:
         return parse_number(value)
     except ValueError:
-        print(f"{value} is not a number! Try prefixing with a dollar sign ($)")
+        print(f"{value} is not a number! Did you mean ${value}?")
         sys.exit(1)
 
 
