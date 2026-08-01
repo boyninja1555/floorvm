@@ -1,18 +1,18 @@
-<h1 align="center">FloorVM - Fantasy Virtual Game Console</h1>
+<h1 align="center">FloorVM - Floor's Virtual Game Console</h1>
 
-A lightweight, high-efficiency virtual machine with a variable-length byte-stream ISA, built for deterministic execution and low-level fantasy hardware/game development. Even though it's called a virtual machine, it's technically emulating a fantasy game console never put into production due to my brokeness and lateness.
+A virtual machine with a variable-length ISA, built for low-level hardware/game development targeting a non-existent console. Even though it's called a virtual machine, it's technically emulating a virtual game console never put into production due to my brokeness and lateness.
 
 ---
 
 ## Architecture
 
-**FloorVM** operates on a unified memory map with 16 general-purpose 32-bit registers, big-endian multi-byte serialization, and a compact variable-length instruction set architecture.
+**FloorVM** uses a single memory section with 16 general-purpose 32-bit registers, big-endian serialization, and a variable-length ISA.
 
 ### System specs
 
 | Component              | Value / Specification                          |
 |------------------------|------------------------------------------------|
-| **Target frame rate**  | 60 FPS (CYCLES_PER_FRAME = 16,666)             |
+| **Target frame rate**  | 60 FPS (cycles per frame = 16,666)             |
 | **Display resolution** | 40 × 30 pixels (1.2KB total VRAM)              |
 | **Registers**          | 16 general-purpose 32-bit registers (r0 – r15) |
 | **Program counter**    | Unsigned 16-bit integer (pc)                   |
@@ -21,31 +21,20 @@ A lightweight, high-efficiency virtual machine with a variable-length byte-strea
 
 ---
 
-## Unified memory map
+### Memory addresses & offsets
 
-Memory is mapped into four distinct linear segments across a continuous byte array:
-
-| Bounds              | Name                       | Size   |
-|---------------------|----------------------------|--------|
-| `0x0000` - `0x1FFF` | Program ROM / Code segment | 8 KiB  |
-| `0x2000` - `0x24AF` | VRAM display buffer        | 1.2 KB |
-| `0x24B0`            | Input controller state     | 1 byte |
-| `0x24B1` - `0x34B0` | Safe user work RAM         | 4 KiB  |
-
-### Memory Addresses & Offsets
-
-| Region            | Start address (decimal) | Start address (hex) | Size   | Description                                   |
-|-------------------|-------------------------|---------------------|--------|-----------------------------------------------|
-| **Program ROM**   | 0                       | 0x0000              | 8 KiB  | Executable bytecode & embedded data assets    |
-| **VRAM buffer**   | 8192                    | 0x2000              | 1.2 KB | 40 x 30 byte-addressable display buffer       |
-| **Input byte**    | 9392                    | 0x24B0              | 1 byte | Memory-mapped controller button bitmask       |
-| **User work RAM** | 9393                    | 0x24B1              | 4 KiB  | General-purpose user-controlled free RAM      |
+| Region            | Start address   | Size   | Description                                |
+|-------------------|-----------------|--------|--------------------------------------------|
+| **Program ROM**   | 0 / `0x0000`    | 8 KiB  | Executable bytecode & embedded data assets |
+| **VRAM buffer**   | 8192 / `0x2000` | 1.2 KB | 40 x 30 byte-addressable display buffer    |
+| **Input byte**    | 9392 / `0x24B0` | 1 byte | Memory-mapped controller button bitmask    |
+| **User work RAM** | 9393 / `0x24B1` | 4 KiB  | General-purpose, user-controlled free RAM  |
 
 ---
 
-## Controller input map
+## Controller bitmask
 
-Input is polled directly by reading the single memory-mapped byte at address 9392 (0x24B0). Bits represent button states (1=pressed,0=released):
+Input is polled by reading the single byte at address 9392 (`0x24B0`). Bits represent each button's state in 8 buttons (1=pressed,0=released):
 
 | Bit       | Mask (hex) | Flag constant | Button      | Emulator button |
 |-----------|------------|---------------|-------------|-----------------|
@@ -62,7 +51,7 @@ Input is polled directly by reading the single memory-mapped byte at address 939
 
 ## Instruction set architecture
 
-The ISA uses single-byte opcodes followed by inline variable-length operands.
+This ISA uses single-byte opcodes followed by variable-length operands.
 
 ### Control instructions
 
@@ -110,23 +99,23 @@ The ISA uses single-byte opcodes followed by inline variable-length operands.
 
 ## Assembler directives and syntax
 
-The Python assembler compiles `.asm` text files into ROMs padded to exactly 8 KiB.
+The assembler compiles assembly source files into ROMs padded to exactly 8 KiB.
 
-### Syntax Rules
+### Syntax rules
 
-* **Comments:** Anything following a semicolon `;` is treated as a comment.
-* **Labels:** Terminated with a colon (e.g. `main_loop:`). Labels resolve to their absolute byte offsets during assembling.
-* **Registers:** Prefixed with an `r` (e.g. `r0` `r1` `r15`). Numbers can be hex (`0x2000`) or decimal (`8192`).
-* **Macros:** `#define NAME VALUE` replaces any occurrences of `${NAME}` in subsequent lines.
+* **Comments:** Anything prefixed by a semicolon is treated as a comment and is ignored during assembling.
+* **Labels:** Each label declaration ends with a colon (e.g. `main_loop:`). Labels resolve to their absolute byte offsets during assembling.
+* **Registers:** Identifiers prefixed by an `r` (e.g. `r0` `r1` `r15`).
+* **Macros:** `#define NAME VALUE` replaces any occurrences of `${NAME}` in future lines.
 
 ### Directives
 
-| Directive | Syntax                 | Description                                                      |
-|-----------|------------------------|------------------------------------------------------------------|
-| `.BYTE`   | `.BYTE 0x01 0x02 255`  | Emits raw byte values                                            |
-| `.HEX`    | `.HEX 48656C6C6F`      | Emits a raw hex byte stream (must be of even length)             |
-| `.UTF8`   | `.UTF8 "Hello World"`  | Emits raw UTF-8 string bytes                                     |
-| `.LUTF8`  | `.LUTF8 "Hello World"` | Emits 4-byte length prefix (big-endian) followed by string bytes |
+| Directive | Syntax                 | Description                                                            |
+|-----------|------------------------|------------------------------------------------------------------------|
+| `.BYTE`   | `.BYTE 0x01 0x02 255`  | Outputs raw bytes                                                      |
+| `.HEX`    | `.HEX 48656C6C6F`      | Outputs a raw byte stream (must be of even length)                     |
+| `.UTF8`   | `.UTF8 "Hello World"`  | Outputs UTF-8 string bytes                                             |
+| `.LUTF8`  | `.LUTF8 "Hello World"` | Outputs a 4-byte length prefix (big-endian) followed by a UTF-8 string |
 
 ---
 
@@ -154,14 +143,18 @@ button_pressed:
 
 ---
 
-## Building and running
+## Assembling and running
 
-### Assembling code
+### Assembling source
 
 Run the assembler script to produce the target `.from` (FloorVM ROM) file:
 
 ```bash
-python assembler/main.py programs/paint.txt programs/paint.from
+# Windows
+python assembler\main.py programs\paint.txt programs\paint.from
+
+# Linux/macOS
+python3 assembler/main.py programs/paint.txt programs/paint.from
 ```
 
 ### Testing with the VM
@@ -174,7 +167,7 @@ This repository ships the latest build of the VM as a native executable for 5 pl
 - Linux on ARM64
 - macOS, but only for Apple Silicon (ARM64)
 
-You can find the ZIPs and TARs containing these executables (potentially including necessary libraries placed next to the executable) on the [Releases](https://github.com/boyninja1555/floorvm/releases) tab. Every time we push an update, though, it publishes a new release. If your release doesn't work, you can download an earlier one!
+You can find the ZIPs and TARs containing these executables (potentially including necessary libraries placed next to the executable) in the [Releases](https://github.com/boyninja1555/floorvm/releases) tab. Every time we push an update, though, it publishes a new release. If your release doesn't work, you can download an earlier one!
 
 ```bash
 # Windows
