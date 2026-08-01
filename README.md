@@ -105,7 +105,7 @@ The assembler compiles assembly source files into ROMs padded to exactly 8 KiB.
 
 * **Comments:** Anything prefixed by a semicolon is treated as a comment and is ignored during assembling.
 * **Labels:** Each label declaration ends with a colon (e.g. `main_loop:`). Labels resolve to their absolute byte offsets during assembling.
-* **Registers:** Identifiers prefixed by an `r` (e.g. `r0` `r1` `r15`).
+* **Registers:** Identifiers prefixed by an `r` (`r0`-`r15`).
 * **Macros:** `#define NAME VALUE` replaces any occurrences of `${NAME}` in future lines.
 
 ### Directives
