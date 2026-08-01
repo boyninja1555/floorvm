@@ -102,14 +102,27 @@ def write_u32(output: bytearray, value: int):
 
 
 def resolve(value: str, labels: dict[str, int]) -> int:
-    if value in labels:
-        return labels[value]
+    # DEPRECATED! Replaced `labelname` with `$labelname` in assembly source, works globally.
+    # if value in labels:
+    #    return labels[value]
 
     try:
         return parse_number(value)
     except ValueError:
-        print(f"Label {value} did not resolve!")
+        print(f"{value} is not a number! Try prefixing with a dollar sign ($)")
         sys.exit(1)
+
+
+def substitute_labels(lines: list[str], labels: dict[str, int]) -> list[str]:
+    def replace(match):
+        name = match.group(1)
+        if name not in labels:
+            print(f"Unknown label ${name}!")
+            sys.exit(1)
+
+        return str(labels[name])
+
+    return [re.sub(r"\$([A-Za-z_][A-Za-z0-9_]*)", replace, line) for line in lines]
 
 
 def assemble(source: str) -> bytes:
@@ -131,7 +144,7 @@ def assemble(source: str) -> bytes:
         elif opcode == ".HEX":
             hex_string = parts[1].replace(" ", "")
             if len(hex_string) % 2 != 0:
-                print("Directive .hex requires an even number of hex digits!")
+                print("Directive .hex requires an even number of digits!")
                 sys.exit(1)
 
             position += len(hex_string) // 2
@@ -145,6 +158,7 @@ def assemble(source: str) -> bytes:
             print(f"Unknown opcode/directive {opcode}!")
             sys.exit(1)
 
+    lines = substitute_labels(lines, labels)
     output = bytearray()
     for line in lines:
         if line.endswith(":"):

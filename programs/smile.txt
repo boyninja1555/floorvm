@@ -1,7 +1,7 @@
 #define REG_COLOR r0
 
 smile:
-	set8 ${REG_COLOR} 255     ; Sets color register to 255 (alpha 100%)
+	set8 ${REG_COLOR} 0xFF    ; Sets color register to 0xFF (255, alpha 100%)
 	store8 ${REG_COLOR} 8274  ; Draws alpha for part of smile face
 	store8 ${REG_COLOR} 8278  ; Draws alpha for part of smile face
 	store8 ${REG_COLOR} 8353  ; Draws alpha for part of smile face
@@ -14,5 +14,5 @@ smile:
 	store8 ${REG_COLOR} 8476  ; Draws alpha for part of smile face
 	store8 ${REG_COLOR} 8477  ; Draws alpha for part of smile face
 
-forever:         ; Automatically jumped to after smile face is drawn (due to label ordering)
-	jmp forever  ; Restarts forever loop
+forever:          ; Automatically jumped to after smile face is drawn (due to label ordering)
+	jmp $forever  ; Restarts forever loop

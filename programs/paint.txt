@@ -40,7 +40,7 @@ game_loop:
     set8 ${REG_COLOR} 255
     set32 ${REG_MASK} ${BTN_SELECT}
     and ${REG_MASK} ${REG_INPUT} ${REG_MASK}
-    jmpiz skip_eraser ${REG_MASK}
+    jmpiz $skip_eraser ${REG_MASK}
     set8 ${REG_COLOR} 0               ; Only when SELECT is held, switches to eraser
 
 skip_eraser:
@@ -53,33 +53,33 @@ skip_eraser:
 	; Handles movement (checks every direction independently for diagonal movement)
     set32 ${REG_MASK} ${BTN_UP}
     and ${REG_MASK} ${REG_INPUT} ${REG_MASK}
-    jmpiz check_down ${REG_MASK}
-    jmpiz check_down ${REG_Y}  ; Prevents underflow if Y == 0
+    jmpiz $check_down ${REG_MASK}
+    jmpiz $check_down ${REG_Y}  ; Prevents underflow if Y == 0
     sub ${REG_Y} ${REG_Y} ${REG_ONE}
 
 check_down:  ; Downward movement
     set32 ${REG_MASK} ${BTN_DOWN}
     and ${REG_MASK} ${REG_INPUT} ${REG_MASK}
-    jmpiz check_left ${REG_MASK}
+    jmpiz $check_left ${REG_MASK}
     set32 ${REG_TEMP} 29            ; Height - 1
     sub ${REG_TEMP} ${REG_TEMP} ${REG_Y}
-    jmpiz check_left ${REG_TEMP}    ; Prevent overflow if Y == 29
+    jmpiz $check_left ${REG_TEMP}    ; Prevent overflow if Y == 29
     add ${REG_Y} ${REG_Y} ${REG_ONE}
 
 check_left:  ; Leftward movement
     set32 ${REG_MASK} ${BTN_LEFT}
     and ${REG_MASK} ${REG_INPUT} ${REG_MASK}
-    jmpiz check_right ${REG_MASK}
-    jmpiz check_right ${REG_X}      ; Prevent underflow if X == 0
+    jmpiz $check_right ${REG_MASK}
+    jmpiz $check_right ${REG_X}      ; Prevent underflow if X == 0
     sub ${REG_X} ${REG_X} ${REG_ONE}
 
 check_right:  ; Rightward movement
     set32 ${REG_MASK} ${BTN_RIGHT}
     and ${REG_MASK} ${REG_INPUT} ${REG_MASK}
-    jmpiz draw_cursor ${REG_MASK}
+    jmpiz $draw_cursor ${REG_MASK}
     set32 ${REG_TEMP} 39            ; Width - 1
     sub ${REG_TEMP} ${REG_TEMP} ${REG_X}
-    jmpiz draw_cursor ${REG_TEMP}   ; Prevent overflow if X == 39
+    jmpiz $draw_cursor ${REG_TEMP}   ; Prevent overflow if X == 39
     add ${REG_X} ${REG_X} ${REG_ONE}
 
 draw_cursor:
@@ -94,5 +94,5 @@ draw_cursor:
 
 delay_loop:
     sub ${REG_DELAY} ${REG_DELAY} ${REG_ONE}
-    jmpnz delay_loop ${REG_DELAY}
-    jmp game_loop
+    jmpnz $delay_loop ${REG_DELAY}
+    jmp $game_loop

@@ -26,7 +26,7 @@ loop:                                         ; Automatically jumped to after _s
 	load8 ${ADDR_INPUT} ${REG_INPUT}          ; Reads 8-button state
     set32 ${REG_MASK} ${BTN_SELECT}           ; Loads bitmask for SELECT
     and ${REG_MASK} ${REG_INPUT} ${REG_MASK}  ; r9 = r8 & 0x06
-    jmpnz loop ${REG_MASK}                    ; Retries loop if SELECT == pressed (1)
+    jmpnz $loop ${REG_MASK}                   ; Retries loop if SELECT == pressed (1)
 
 	store8p ${REG_COLOR} ${REG_POS}           ; Stores main color into the position (which is always within VRAM bounds)
 	add ${REG_POS} ${REG_POS} ${REG_SPEED}    ; Adds speed to position
@@ -36,8 +36,8 @@ loop:                                         ; Automatically jumped to after _s
 
 loop_delay:
 	sub ${REG_DELAY} ${REG_DELAY} ${REG_ONE}            ; Subtracts r7 (1) from r6 (delay)
-    jmpnz loop_delay ${REG_DELAY}                       ; Delays again if r6 (delay) != zero
+    jmpnz $loop_delay ${REG_DELAY}                      ; Delays again if r6 (delay) != zero
 	sub ${REG_COUNTDOWN} ${REG_COUNTDOWN} ${REG_SPEED}  ; Subtracts speed from countdown (possibly hacky I can't bother to figure out the logic in my brain)
-	jmpnz loop ${REG_COUNTDOWN}                         ; Restarts program loop if countdown != zero
+	jmpnz $loop ${REG_COUNTDOWN}                        ; Restarts program loop if countdown != zero
 
 halt  ; Automatically halts execution when loop is escaped

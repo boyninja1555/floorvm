@@ -131,11 +131,11 @@ start:
     STORE8 r1 ${VRAM}  ; Draws pixel at top-left corner (0,0)
 
 loop:
-    LOAD8 ${INPUT} r2        ; Reads controller button bitmask
-    SET8 r3 0x10             ; Bit 4 = BTN_A
-    AND r4 r2 r3             ; Checks if A is pressed
-    JMPNZ button_pressed r4  ; Jump if BTN_A is down
-    JMP loop                 ; Repeats main loop
+    LOAD8 ${INPUT} r2         ; Reads controller button bitmask
+    SET8 r3 0x10              ; Bit 4 = BTN_A
+    AND r4 r2 r3              ; Checks if A is pressed
+    JMPNZ $button_pressed r4  ; Jump if BTN_A is down
+    JMP $loop                 ; Repeats main loop
 
 button_pressed:
     HALT  ; Stops execution

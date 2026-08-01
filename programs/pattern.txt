@@ -26,7 +26,7 @@ pattern:
 	set32 ${REG_TMP2} 1                      ; Sets r2 to 1
 	sub ${REG_TEMP} ${REG_TEMP} ${REG_TMP2}  ; Subtracts 1 (r2) from countdown
 	store32 ${REG_TEMP} ${ADDR_COUNTDOWN}    ; Stores r1 into countdown
-	jmpnz pattern ${REG_TEMP}                ; Next pattern run if countdown != zero
+	jmpnz $pattern ${REG_TEMP}               ; Next pattern run if countdown != zero
 
-forever:         ; Automatically jumped to after pattern is drawn (due to label ordering)
-	jmp forever  ; Restarts forever loop
+forever:          ; Automatically jumped to after pattern is drawn (due to label ordering)
+	jmp $forever  ; Restarts forever loop

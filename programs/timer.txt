@@ -7,6 +7,6 @@ _start:
 
 loop:
 	sub ${REG_TIMER} ${REG_TIMER} ${REG_DECREMENTAL}  ; Subtracts 1 from timer
-	jmpnz loop ${REG_TIMER}                           ; Restarts loop if timer != 0
+	jmpnz $loop ${REG_TIMER}                          ; Restarts loop if timer != 0
 
 halt  ; Automatically halts execution when loop is escaped
