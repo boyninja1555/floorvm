@@ -1,0 +1,3 @@
+[submodule "compiler/libcfloor"]
+	path = compiler/libcfloor
+	url = https://github.com/boyninja1555/libcfloor.git
