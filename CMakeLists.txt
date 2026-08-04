@@ -8,7 +8,6 @@ set(CMAKE_C_EXTENSIONS OFF)
 find_package(SDL3 REQUIRED CONFIG)
 
 # Executable
-file(GLOB FV_SOURCES CONFIGURE_DEPENDS "src/*.c")
-add_executable(FloorVM ${FV_SOURCES})
-target_include_directories(FloorVM PRIVATE src include)
+add_executable(FloorVM src/main.c src/util.c src/renderer.c src/input.c src/machine.c)
+target_include_directories(FloorVM PRIVATE include)
 target_link_libraries(FloorVM PRIVATE SDL3::SDL3)
