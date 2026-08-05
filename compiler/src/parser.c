@@ -64,16 +64,24 @@ bool parser_parse(ParserState *parser)
     {
         if (!parser_expect(parser, TOKEN_IDENTIFIER))
         {
-            fprintf(stderr, "Expected name after the %s of a variable declaration!", string_to_cstr(token.value));
+            fprintf(stderr, "Expected name after the %s of a variable declaration!\n", string_to_cstr(token.value));
             return false;
         }
 
         String name = parser->tokens[parser->idx].value;
         parser->idx++;
 
+        if (!parser_expect(parser, TOKEN_AT))
+        {
+            fprintf(stderr, "Expected '@' symbol after the name of a variable declaration!\n");
+            return false;
+        }
+
+        parser->idx++;
+
         if (!parser_expect(parser, TOKEN_INT))
         {
-            fprintf(stderr, "Expected integer address after the name of a variable declaration!");
+            fprintf(stderr, "Expected integer address after the '@' symbol of a variable declaration!\n");
             return false;
         }
 
@@ -88,7 +96,7 @@ bool parser_parse(ParserState *parser)
 
         if (!parser_expect(parser, TOKEN_SEP))
         {
-            fprintf(stderr, "Expected semicolon at the end of a variable declaration!");
+            fprintf(stderr, "Expected semicolon at the end of a variable declaration!\n");
             return false;
         }
 
@@ -105,7 +113,7 @@ bool parser_parse(ParserState *parser)
 
             if (!parser_expect(parser, TOKEN_INT))
             {
-                fprintf(stderr, "Expected integer value after the equal sign of a variable assignment!");
+                fprintf(stderr, "Expected integer value after the '=' symbol of a variable assignment!\n");
                 return false;
             }
 
@@ -119,7 +127,7 @@ bool parser_parse(ParserState *parser)
 
             if (!parser_expect(parser, TOKEN_SEP))
             {
-                fprintf(stderr, "Expected semicolon at the end of a variable assignment!");
+                fprintf(stderr, "Expected semicolon at the end of a variable assignment!\n");
                 return false;
             }
 

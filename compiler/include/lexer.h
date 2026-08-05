@@ -9,6 +9,7 @@ typedef enum
     TOKEN_EOF,
     TOKEN_SEP,
     TOKEN_EQUALS,
+    TOKEN_AT,
 
     TOKEN_TYPE,
     TOKEN_IDENTIFIER,
