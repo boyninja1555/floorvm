@@ -10,12 +10,8 @@ char *tokentype_string(TokenType type)
         return "EOF";
     case TOKEN_SEP:
         return "SEP";
-    case TOKEN_U8:
-        return "U8";
-    case TOKEN_U16:
-        return "U16";
-    case TOKEN_U32:
-        return "U32";
+    case TOKEN_TYPE:
+        return "TYPE";
     case TOKEN_IDENTIFIER:
         return "IDENTIFIER";
     case TOKEN_STRING:
@@ -75,14 +71,8 @@ static bool is_intstring(const String string)
 
 static TokenType classify_literal(const String literal)
 {
-    if (string_equals_cstr(literal, "u8"))
-        return TOKEN_U8;
-
-    if (string_equals_cstr(literal, "u16"))
-        return TOKEN_U16;
-
-    if (string_equals_cstr(literal, "u32"))
-        return TOKEN_U32;
+    if (string_equals_cstr(literal, "u8") || string_equals_cstr(literal, "u16") || string_equals_cstr(literal, "u32"))
+        return TOKEN_TYPE;
 
     if (is_intstring(literal))
         return TOKEN_INT;

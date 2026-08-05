@@ -6,6 +6,6 @@ set(CMAKE_C_EXTENSIONS OFF)
 
 # Executable
 add_subdirectory(libcfloor)
-add_executable(fvmc src/main.c src/lexer.c)
+add_executable(fvmc src/main.c src/lexer.c src/parser.c)
 target_include_directories(fvmc PRIVATE include)
 target_link_libraries(fvmc PRIVATE cfloor)

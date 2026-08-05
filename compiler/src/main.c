@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "lexer.h"
+#include "parser.h"
 
 int main(int argc, const char *argv[])
 {
@@ -15,6 +16,9 @@ int main(int argc, const char *argv[])
         printf("%s => \"%s\"\n", tokentype_string(token.type), string_to_cstr(token.value));
     }
 
+    ParserState parser = parser_new(&lexer);
+
+    parser_free(&parser);
     lexer_free(&lexer);
     return 0;
 }
