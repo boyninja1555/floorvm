@@ -1,6 +1,7 @@
 #include "lexer.h"
-#include <stdlib.h>
 #include <ctype.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 char *tokentype_string(TokenType type)
 {
@@ -126,6 +127,24 @@ bool lexer_lex(LexerState *lexer)
             lexer->idx++;
 
         return true;
+    }
+
+    if (c == '/' && lexer->idx < lexer->source.length && lexer->source.data[lexer->idx] == '*')
+    {
+        lexer->idx++;
+        while (lexer->idx < lexer->source.length)
+        {
+            if (lexer->source.data[lexer->idx] == '*' && lexer->idx + 1 < lexer->source.length && lexer->source.data[lexer->idx + 1] == '/')
+            {
+                lexer->idx += 2;
+                return true;
+            }
+
+            lexer->idx++;
+        }
+
+        fprintf(stderr, "Unterminated block comment!\n");
+        return false;
     }
 
     if (c == ' ' || c == '\t' || c == '\n' || c == '\r')
