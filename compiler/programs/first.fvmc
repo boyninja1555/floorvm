@@ -1,2 +1,2 @@
-u8 vram @ 8126;
-vram = 255;
+u8 vram @ 8126; // Creates a variable pointing to memory address 8126
+vram = 255; // Sets that variable to 255

@@ -119,6 +119,15 @@ bool lexer_lex(LexerState *lexer)
         return 1;
     }
 
+    if (c == '/' && lexer->idx < lexer->source.length && lexer->source.data[lexer->idx] == '/')
+    {
+        lexer->idx++;
+        while (lexer->idx < lexer->source.length && lexer->source.data[lexer->idx] != '\n')
+            lexer->idx++;
+
+        return true;
+    }
+
     if (c == ' ' || c == '\t' || c == '\n' || c == '\r')
     {
         lexer_fillit(lexer);
