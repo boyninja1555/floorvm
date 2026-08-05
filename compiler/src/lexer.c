@@ -76,7 +76,7 @@ static bool is_intstring(const String string)
 
 static TokenType classify_literal(const String literal)
 {
-    if (string_equals_cstr(literal, "u8") || string_equals_cstr(literal, "u16") || string_equals_cstr(literal, "u32"))
+    if (string_equals_cstr(literal, "u8") || string_equals_cstr(literal, "u32"))
         return TOKEN_TYPE;
 
     if (is_intstring(literal))

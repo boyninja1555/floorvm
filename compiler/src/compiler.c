@@ -77,13 +77,30 @@ bool compiler_compile(CompilerState *compiler)
 
             if (string_equals_cstr(var->type, "u8"))
             {
+                if (assignment->value < 0 || assignment->value > 255)
+                {
+                    fprintf(stderr, "Invalid u8! Must be 0-255 (inclusive).\n");
+                    return false;
+                }
+
                 fprintf(compiler->out, "\tset8 r0 %u\n", assignment->value);
                 fprintf(compiler->out, "\tstore8 r0 ${%s}\n", string_to_cstr(assignment->name));
             }
-            else
+            else if (string_equals_cstr(var->type, "u32"))
             {
+                if (assignment->value < 0 || assignment->value > 255)
+                {
+                    fprintf(stderr, "Invalid u32! Must be 0-4294967295 (inclusive).\n");
+                    return false;
+                }
+
                 fprintf(compiler->out, "\tset32 r0 %u\n", assignment->value);
                 fprintf(compiler->out, "\tstore32 r0 ${%s}\n", string_to_cstr(assignment->name));
+            }
+            else
+            {
+                fprintf(stderr, "Invalid datatype %s!\n", var->type);
+                return false;
             }
 
             break;
