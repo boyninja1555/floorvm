@@ -4,7 +4,7 @@
 
 int main(int argc, const char *argv[])
 {
-    LexerState lexer = lexer_new(string_from_cstr("u8 name; \"Random string!!\";"));
+    LexerState lexer = lexer_new(string_from_cstr("u8 name 9393;"));
     while (!lexer.reached_eof)
         if (!lexer_lex(&lexer))
             return 1;

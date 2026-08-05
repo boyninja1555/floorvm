@@ -1,5 +1,6 @@
 #include "lexer.h"
 #include <stdlib.h>
+#include <ctype.h>
 
 char *tokentype_string(TokenType type)
 {
@@ -60,6 +61,18 @@ void lexer_token(LexerState *lexer, const Token token)
     lexer->tokens[lexer->tokens_length++] = token;
 }
 
+static bool is_intstring(const String string)
+{
+    if (string.length == 0)
+        return false;
+
+    for (int i = 0; i < string.length; i++)
+        if (!isdigit((unsigned char)string.data[i]))
+            return false;
+
+    return true;
+}
+
 static TokenType classify_literal(const String literal)
 {
     if (string_equals_cstr(literal, "u8"))
@@ -71,8 +84,8 @@ static TokenType classify_literal(const String literal)
     if (string_equals_cstr(literal, "u32"))
         return TOKEN_U32;
 
-    // if (string_is_integer(literal))
-    //     return TOKEN_INT;
+    if (is_intstring(literal))
+        return TOKEN_INT;
 
     return TOKEN_IDENTIFIER;
 }
