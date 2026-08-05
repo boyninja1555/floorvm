@@ -10,6 +10,8 @@ char *tokentype_string(TokenType type)
         return "EOF";
     case TOKEN_SEP:
         return "SEP";
+    case TOKEN_EQUALS:
+        return "EQUALS";
     case TOKEN_TYPE:
         return "TYPE";
     case TOKEN_IDENTIFIER:
@@ -125,6 +127,13 @@ bool lexer_lex(LexerState *lexer)
     {
         lexer_fillit(lexer);
         lexer_token(lexer, token_new(TOKEN_SEP, string_from_cstr(cstr_dupwt(&c, 1))));
+        return true;
+    }
+
+    if (c == '=')
+    {
+        lexer_fillit(lexer);
+        lexer_token(lexer, token_new(TOKEN_EQUALS, string_from_cstr(cstr_dupwt(&c, 1))));
         return true;
     }
 

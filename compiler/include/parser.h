@@ -6,7 +6,8 @@
 
 typedef enum
 {
-    AST_VAR_DECLARE,
+    AST_UVAR_DECLARE,
+    AST_UVAR_ASSIGN,
     AST_LITERAL_INT,
     AST_LITERAL_STRING,
     AST_LITERAL_IDENTIFIER,
@@ -25,8 +26,14 @@ typedef struct
     String type;
     String name;
     u32 address;
-    AST *value;
-} AstVarDeclare;
+} AstUvarDeclare;
+
+typedef struct
+{
+    AST base;
+    String name;
+    u32 value;
+} AstUvarAssign;
 
 typedef struct
 {
@@ -49,6 +56,7 @@ typedef struct
 typedef struct
 {
     Token *tokens;
+    u32 tokens_length;
     u32 idx;
 
     AST **nodes;
@@ -61,5 +69,7 @@ typedef struct
 ParserState parser_new(LexerState *lexer);
 
 void parser_node(ParserState *parser, AST *node);
+
+bool parser_parse(ParserState *parser);
 
 void parser_free(ParserState *parser);
